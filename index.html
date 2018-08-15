@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+   crossorigin=""/>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      position:absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+   integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+   crossorigin=""></script>
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  <script>
+		
+    // Use turf to set up the map extent and some dummy data
+    var bboxArray = [-78.742641, 35.739441, -78.5545, 35.843317]
+    var bbox = turf.bboxPolygon(bboxArray);
+		var bboxJson = L.geoJson(bbox);    
+
+		// Setup map    
+    var map = L.map('map');
+    map.fitBounds(bboxJson.getBounds());
+    
+    // Add basemap
+    var toner = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    });
+    toner.addTo(map);
+    
+    // Add random points
+    var points = turf.randomPoint(25,{bbox: bboxArray});
+    var pointsJson = L.geoJson(points).addTo(map)
+    
+  </script>
+</body>
